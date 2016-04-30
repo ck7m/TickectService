@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import static org.junit.Assert.*;
 
 /**
- * Created by lva833 on 4/29/16.
+ * Created by Chandramohan on 4/29/16.
  */
 public class IT_TicketServiceDaoImplTest extends SpringJunitRunner {
     @Resource

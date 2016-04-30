@@ -2,6 +2,7 @@ package com.ticketingservice;
 
 import com.ticketingservice.helpers.ScheduledTaskExecutor;
 import org.hsqldb.util.DatabaseManagerSwing;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,6 +15,10 @@ import java.util.Properties;
 
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.HSQL;
 
+/**
+ * Spring Configuration class
+ *
+ */
 @SpringBootApplication
 @EnableConfigurationProperties
 public class Application {
@@ -22,12 +27,16 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+
+    /**
+     * Inmemory HSQL DB
+     * @return Datasource
+     */
     @Bean
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(HSQL)
                 .setScriptEncoding("UTF-8")
-                // .addScript("db/sql/schema.sql")
                 .build();
     }
 
@@ -49,14 +58,15 @@ public class Application {
     }
 
     @Bean(destroyMethod = "destroy")
-    public ScheduledTaskExecutor createScheduledTaskExector() {
-        return new ScheduledTaskExecutor(5);
+    public ScheduledTaskExecutor createScheduledTaskExector(@Value("${ticket.threadpool.size}") int threadPoolSize) {
+        return new ScheduledTaskExecutor(threadPoolSize);
     }
 
+    /**
+     * GUI for the HSQL DB. Uncomment the @PostConstruct annotation to enable gui.
+     */
     // @PostConstruct
     public void getDbManager() {
-        DatabaseManagerSwing.main(
-                new String[]{"--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", ""});
+        DatabaseManagerSwing.main(new String[]{"--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", ""});
     }
-
 }

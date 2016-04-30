@@ -4,7 +4,9 @@ import com.ticketingservice.model.Level;
 import com.ticketingservice.model.Stage;
 
 /**
- * Created by lva833 on 4/29/16.
+ * Factory class to create Stage with attached levels
+ *
+ * Created by Chandramohan on 4/29/16.
  */
 public class StageFactory {
 

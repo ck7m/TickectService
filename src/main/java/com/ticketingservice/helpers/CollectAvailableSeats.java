@@ -9,14 +9,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Helper class to collect the available seats in each Row and by Level
+ */
 public class CollectAvailableSeats {
 
+    /**
+     * Subclass to Hold the available seats for each level. New instance is created for each Level.
+     */
     private static class AvailableSeatsByLevel {
         private Map<Integer, Integer> availableSeatsByRow = new HashMap<>();
+        /**
+         * Avaliable seats in the Level
+         */
         private int availableSeats;
     }
 
+    /**
+     * Map to hold the Avaliable seats for each level
+     */
     private Map<Integer, AvailableSeatsByLevel> collectedDataByLevelId = new LinkedHashMap<Integer, AvailableSeatsByLevel>();
+    /**
+     * Total number of available seats across all the levels
+     */
     private int totalAvailableSeats;
 
     public Integer getAvailableSeatsByRow(int levelId, int row) {
@@ -33,17 +48,6 @@ public class CollectAvailableSeats {
     }
 
     private AvailableSeatsByLevel collectAvailableSeats(Level level) {
-        /*for(Seat[] row: level.getSeats()){
-            // numOfAvailableSeats += Arrays.stream(row).sorted(comparator).filter(seat->(seat==null)).count();
-           Seat seat;
-           for(int j=0;j < level.getColumns();j++){
-               seat = row[j];
-               if(seat == null || seat.getStatus() == SeatStatus.AVAILABLE){
-                   numOfAvailableSeats += level.getColumns()-j;
-                   break;
-               }
-           }
-          }*/
         AvailableSeatsByLevel levelData = new AvailableSeatsByLevel();
         for (int i = 1; i <= level.getRows(); i++) {
             Map<Integer, Seat> row = level.getSeatsMap().get(i);
@@ -59,6 +63,11 @@ public class CollectAvailableSeats {
         return levelData;
     }
 
+    /**
+     * Helper method to collect the available seats for each level
+     * @param levels
+     * @return
+     */
     public static CollectAvailableSeats collectAvailableSeats(Set<Level> levels) {
         Function<Set<Level>, CollectAvailableSeats> collector = input -> {
             CollectAvailableSeats result = new CollectAvailableSeats();

@@ -42,6 +42,13 @@ public class Stage implements Serializable {
         this.levels = levels;
     }
 
+    /**
+     * Get a sublist of levels. Both the min and max levels are inclusive
+     *
+     * @param minLevel
+     * @param maxLevel
+     * @return
+     */
     public Set<Level> getLevels(Optional<Integer> minLevel, Optional<Integer> maxLevel) {
         Set<Level> levels = this.getLevels();
         if (minLevel.isPresent() || maxLevel.isPresent()) {

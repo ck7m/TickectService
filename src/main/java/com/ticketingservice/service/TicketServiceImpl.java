@@ -17,17 +17,30 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Main class to find and book the tickets. As <code>Stage</code> is not provided in the interface it is provided as field variable.
+ * It can be loaded from DB in the future.
+ *
+ */
 @Service
 public class TicketServiceImpl implements TicketService {
 
     private Stage stage;
 
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
+
     @Resource
     private TicketServiceDao ticketServiceDao;
+
+    /**
+     * Task executor to expire the HOLD seats after timeout.
+     */
     @Resource
     private ScheduledTaskExecutor scheduledTaskExecutor;
 
+    /**
+     * Timeout in seconds to expire the Hold seats if not booked already.
+     */
     @Value("${ticket.timeoutinseconds}")
     private long timeoutInSecs;
 
@@ -49,11 +62,11 @@ public class TicketServiceImpl implements TicketService {
         synchronized (atomicInteger) {
             CollectAvailableSeats collectAvailableSeats = CollectAvailableSeats.collectAvailableSeats(levels);
             if (collectAvailableSeats.getTotalAvailableSeats() < numSeats) {
-                throw new TicketServiceException("Not enough seats available");
+                throw new TicketServiceException("Sorry there no enough seats available. Available Seats: "+collectAvailableSeats.getTotalAvailableSeats());
             }
             reservedSeats = new HashSet<>(numSeats);
-
             try {
+                //create requested seats
                 holdSeats(numSeats, levels, reservedSeats, collectAvailableSeats);
                 if (reservedSeats.size() == 0) return null;
 
@@ -63,14 +76,24 @@ public class TicketServiceImpl implements TicketService {
                 seatHold.setStatus(SeatHold.SeatHoldStatus.HOLD.name());
                 seatHold.setCreationTs(new Date());
                 ticketServiceDao.saverUpdate(seatHold);
+                //add timeout for the HOLD seats
                 this.cancelTimedOutReservation(seatHold.getId());
             } catch (Exception e) {
+                //release the hold seats from each level
                 resetSeats(reservedSeats);
             }
         }
         return seatHold;
     }
 
+    /**
+     * Reserve the available seats in the given levels
+     * *
+     * @param remainingSeats
+     * @param levels
+     * @param reservedSeats
+     * @param collectAvailableSeats
+     */
     private void holdSeats(int remainingSeats, Set<Level> levels, Set<Seat> reservedSeats, CollectAvailableSeats collectAvailableSeats) {
         for (Level level : levels) {
             int rowId = 1, availableSeats;
@@ -103,6 +126,11 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
+    /**
+     * Release the Hold seats. After the seat is released from the level. The seat is removed from the input set during each iteration.
+     *
+     * @param reservedSeats
+     */
     private void resetSeats(Set<Seat> reservedSeats) {
         if (reservedSeats == null || reservedSeats.size() == 0) return;
         synchronized (atomicInteger) {
@@ -121,6 +149,13 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
+    /**
+     * Attach a Timeout task to each reservation.The task will executed after the given seconds.
+     * First verifies the status of the seathold object in the DB. If it is not HOLD then the method will be returned without doing anything.
+     * If the status is HOLD then the seats are removed the level and then DB is updated to EXPIRED Status.
+     *
+     * @param seatHoldId
+     */
     private void cancelTimedOutReservation(int seatHoldId) {
         try {
             Callable<SeatHold> callable = () -> {
@@ -134,7 +169,6 @@ public class TicketServiceImpl implements TicketService {
                 }
                 return seatHold;
             };
-
             scheduledTaskExecutor.schedule(callable, timeoutInSecs);
         } catch (Exception e) {
             System.out.println("Error happened while canceling the seats. " + e.getMessage());

@@ -8,7 +8,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by lva833 on 4/29/16.
+ * Helper class to Schedule task execution. Executor service to schedule tasks after given delay.
+ * <p>
+ * Created by Chandramohan on 4/29/16.
  */
 public class ScheduledTaskExecutor {
 
@@ -16,16 +18,6 @@ public class ScheduledTaskExecutor {
 
     public ScheduledTaskExecutor(int threadPoolSize) {
         executorService = Executors.newScheduledThreadPool(threadPoolSize);
-    }
-
-    public static void scheduleWithTimer(Runnable runnable, int timeToWait) {
-        final Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runnable.run();
-            }
-        }, timeToWait);
     }
 
     public <T> void schedule(Callable<T> callable, long delayInSeconds) {

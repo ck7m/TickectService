@@ -15,19 +15,18 @@ import java.util.Optional;
 import java.util.Scanner;
 
 /**
- * Created by lva833 on 4/30/16.
+ * CommandLineRunner for the Ticket Service. This class will be invoked if executed from the command line and provides interface for the user to book tickets
+ * <p>
+ * Created by chandramohan on 4/30/16.
  */
 @Component
 public class ApplicationStarter implements CommandLineRunner {
-    private static final String INSTRUCTIONS = "1) Press 1 : Find the number of seats in the requested level that are neither held nor reserved\n" +
+    private static final String INSTRUCTIONS = "\n1) Press 1 : Find the number of seats in the requested level that are neither held nor reserved\n" +
             "2) Press 2: Find and hold the best available seats for a customer \n" +
             "3) Press 3: Commit seats held for a specific customer  \n" +
             "Anytime type exit to quit.";
     @Resource
     private TicketService ticketService;
-
-    @Resource
-    Environment env;
 
     @Override
     public void run(String... args) throws Exception {
@@ -35,7 +34,7 @@ public class ApplicationStarter implements CommandLineRunner {
         Stage stage = StageFactory.createDefaultStage();
         ((TicketServiceImpl) ticketService).setStage(stage);
 
-        System.out.println("\n\n Welcome to Ticketing Service system \n");
+        System.out.println("\n\n Welcome to Ticketing Service system.");
         Scanner scanner = new Scanner(System.in);
         String userInputStr = readInput(scanner, INSTRUCTIONS);
         int userInput = parseInt(userInputStr);
@@ -46,7 +45,6 @@ public class ApplicationStarter implements CommandLineRunner {
                     break;
                 case 2:
                     findAndHoldSeats(scanner);
-                    String email;
                     break;
                 case 3:
                     reserveSeats(scanner);

@@ -23,6 +23,8 @@ public interface TicketService {
      * @param maxLevel      the maximum venue level
      * @param customerEmail unique identifier for the customer
      * @return a SeatHold object identifying the specific seats and related information
+     * @throws TicketServiceException If the number of requested seats are not available
+     * @throws IllegalArgumentException
      */
     SeatHold findAndHoldSeats(int numSeats, Optional<Integer> minLevel, Optional<Integer> maxLevel,
                               String customerEmail) throws TicketServiceException;
@@ -33,6 +35,7 @@ public interface TicketService {
      * @param seatHoldId    the seat hold identifier
      * @param customerEmail the email address of the customer to which the seat hold is assigned
      * @return a reservation confirmation code
+     * @throws IllegalArgumentException
      */
     String reserveSeats(int seatHoldId, String customerEmail) throws TicketServiceException;
 
