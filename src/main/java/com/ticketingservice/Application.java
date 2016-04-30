@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -24,9 +25,11 @@ import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication application = new SpringApplication(Application.class);
+        application.setHeadless(false);
+        application.run(args);
+        //SpringApplication.run(Application.class, args).;
     }
-
 
     /**
      * Inmemory HSQL DB
@@ -65,7 +68,7 @@ public class Application {
     /**
      * GUI for the HSQL DB. Uncomment the @PostConstruct annotation to enable gui.
      */
-    // @PostConstruct
+    @PostConstruct
     public void getDbManager() {
         DatabaseManagerSwing.main(new String[]{"--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", ""});
     }

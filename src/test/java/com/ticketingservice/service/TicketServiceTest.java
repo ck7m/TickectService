@@ -119,6 +119,12 @@ public class TicketServiceTest {
         ticketService.findAndHoldSeats(0, Optional.of(1), Optional.of(4), "  ");
     }
 
+
+    @Test(expected = TicketServiceException.class)
+    public void testFindAndHoldSeats_gtThanLevelLimit() throws TicketServiceException {
+        ticketService.findAndHoldSeats(300, Optional.of(2), Optional.of(2), " asdf ");
+    }
+
     @Test
     public void testFindAndHoldSeats_resetSeats() throws TicketServiceException {
         CollectAvailableSeats collectAvailableSeatsBeforeCall = CollectAvailableSeats.collectAvailableSeats(stage.getLevels());

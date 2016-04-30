@@ -50,7 +50,7 @@ public class ApplicationStarter implements CommandLineRunner {
                     reserveSeats(scanner);
                     break;
                 default:
-                    System.out.println("Please enter valid number or 'exit'. ");
+                    System.err.println("Please enter valid number or 'exit'. ");
                     break;
             }
             userInputStr = readInput(scanner, INSTRUCTIONS);
@@ -102,13 +102,12 @@ public class ApplicationStarter implements CommandLineRunner {
         }
     }
 
-    private int parseInt(String userInputStr) {
-        int i = -1;
+    private Integer parseInt(String userInputStr) {
+        Integer i = null;
         if (userInputStr == null || userInputStr.trim().isEmpty()) return i;
         try {
-            i = Integer.parseInt(userInputStr);
-        } catch (NumberFormatException e) {
-        }
+            i = Integer.valueOf(userInputStr);
+        } catch (NumberFormatException e) {}
         return i;
     }
 
@@ -121,7 +120,7 @@ public class ApplicationStarter implements CommandLineRunner {
 
     private Optional<Integer> levelToOptional(String msg, Scanner scanner) {
         String userInputStr = readInput(scanner, msg);
-        int i = parseInt(userInputStr);
-        return i < 0 ? Optional.empty() : Optional.of(i);
+        Integer i = parseInt(userInputStr);
+        return i ==null ? Optional.empty() : Optional.of(i);
     }
 }

@@ -62,7 +62,7 @@ public class TicketServiceImpl implements TicketService {
         synchronized (atomicInteger) {
             CollectAvailableSeats collectAvailableSeats = CollectAvailableSeats.collectAvailableSeats(levels);
             if (collectAvailableSeats.getTotalAvailableSeats() < numSeats) {
-                throw new TicketServiceException("Sorry there no enough seats available. Available Seats: "+collectAvailableSeats.getTotalAvailableSeats());
+                throw new TicketServiceException("Sorry there are no enough seats available. Available Seats: "+collectAvailableSeats.getTotalAvailableSeats());
             }
             reservedSeats = new HashSet<>(numSeats);
             try {
@@ -171,7 +171,7 @@ public class TicketServiceImpl implements TicketService {
             };
             scheduledTaskExecutor.schedule(callable, timeoutInSecs);
         } catch (Exception e) {
-            System.out.println("Error happened while canceling the seats. " + e.getMessage());
+            System.err.println("Error happened while canceling the seats. " + e.getMessage());
         }
     }
 
@@ -179,18 +179,18 @@ public class TicketServiceImpl implements TicketService {
                                                    String customerEmail, int numOfLevels) {
         if (minLevel.isPresent() && (minLevel.get() <= 0 || minLevel.get() > numOfLevels)) {
             throw new IllegalArgumentException(
-                    "Invalid minLevel argument. MinLevel must be between 1 to" + numOfLevels);
+                    "Invalid minLevel argument. MinLevel must be between 1 to " + numOfLevels);
         }
         if (maxLevel.isPresent() && (maxLevel.get() <= 0 || maxLevel.get() > numOfLevels)) {
             throw new IllegalArgumentException(
-                    "Invalid maxLevel argument. MaxLevel must be between 1 to" + numOfLevels);
+                    "Invalid maxLevel argument. MaxLevel must be between 1 to " + numOfLevels);
         }
 
         if (customerEmail == null || customerEmail.trim().isEmpty()) {
-            throw new IllegalArgumentException("Invalid CustomerEmail argument. Please provide valid customerEmail");
+            throw new IllegalArgumentException("Invalid email. Please provide valid customerEmail");
         }
         if (numSeats <= 0) {
-            throw new IllegalArgumentException("Invalid numOfSeats argument. NumOfSeats must be greater than 0");
+            throw new IllegalArgumentException("Invalid value. NumOfSeats must be greater than 0");
         }
 
     }

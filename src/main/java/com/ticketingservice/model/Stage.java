@@ -54,8 +54,11 @@ public class Stage implements Serializable {
         if (minLevel.isPresent() || maxLevel.isPresent()) {
             levels = new TreeSet<>(Level.getComparatorbyLevelId());
             for (Level level : this.getLevels()) {
-                if ((minLevel.isPresent() && minLevel.get() <= level.getLevelId())
-                        || (maxLevel.isPresent() && maxLevel.get() >= level.getLevelId())) {
+                if (!maxLevel.isPresent() && minLevel.isPresent() && minLevel.get() <= level.getLevelId()) {
+                    levels.add(level);
+                }else if(!minLevel.isPresent() && maxLevel.isPresent() && maxLevel.get() >= level.getLevelId()){
+                    levels.add(level);
+                }else if(minLevel.isPresent() && maxLevel.isPresent() && minLevel.get() <= level.getLevelId() && maxLevel.get() >= level.getLevelId()){
                     levels.add(level);
                 }
             }
