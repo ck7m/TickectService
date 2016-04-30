@@ -5,3 +5,5 @@
 bin
 build
 gradle
+.DS_Store
+.idea/

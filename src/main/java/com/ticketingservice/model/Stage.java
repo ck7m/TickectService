@@ -1,10 +1,6 @@
 package com.ticketingservice.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -48,7 +44,7 @@ public class Stage implements Serializable {
 
     public Set<Level> getLevels(Optional<Integer> minLevel, Optional<Integer> maxLevel) {
         Set<Level> levels = this.getLevels();
-       if (minLevel.isPresent() || maxLevel.isPresent()) {
+        if (minLevel.isPresent() || maxLevel.isPresent()) {
             levels = new TreeSet<>(Level.getComparatorbyLevelId());
             for (Level level : this.getLevels()) {
                 if ((minLevel.isPresent() && minLevel.get() <= level.getLevelId())

@@ -1,8 +1,9 @@
 package com.ticketingservice.service;
 
-import java.util.Optional;
-
+import com.ticketingservice.exception.TicketServiceException;
 import com.ticketingservice.model.SeatHold;
+
+import java.util.Optional;
 
 public interface TicketService {
 
@@ -17,22 +18,22 @@ public interface TicketService {
     /**
      * Find and hold the best available seats for a customer
      *
-     * @param numSeats the number of seats to find and hold
-     * @param minLevel the minimum venue level
-     * @param maxLevel the maximum venue level
+     * @param numSeats      the number of seats to find and hold
+     * @param minLevel      the minimum venue level
+     * @param maxLevel      the maximum venue level
      * @param customerEmail unique identifier for the customer
      * @return a SeatHold object identifying the specific seats and related information
      */
     SeatHold findAndHoldSeats(int numSeats, Optional<Integer> minLevel, Optional<Integer> maxLevel,
-            String customerEmail);
+                              String customerEmail) throws TicketServiceException;
 
     /**
      * Commit seats held for a specific customer
      *
-     * @param seatHoldId the seat hold identifier
+     * @param seatHoldId    the seat hold identifier
      * @param customerEmail the email address of the customer to which the seat hold is assigned
      * @return a reservation confirmation code
      */
-    String reserveSeats(int seatHoldId, String customerEmail);
+    String reserveSeats(int seatHoldId, String customerEmail) throws TicketServiceException;
 
 }

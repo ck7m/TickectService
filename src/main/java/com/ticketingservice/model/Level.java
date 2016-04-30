@@ -5,15 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Level {
-    
+
     private int levelId;
     private String levelName;
     private double price;
     private int rows;
     private int columns;
     private Seat[][] seats;
-    private Map<Integer,Map<Integer,Seat>> seatsMap;
-    
+    private Map<Integer, Map<Integer, Seat>> seatsMap;
+
     public Level(int levelId, String levelName, double price, int rows, int columns) {
         this.levelId = levelId;
         this.levelName = levelName;
@@ -59,24 +59,24 @@ public class Level {
     public int getColumns() {
         return columns;
     }
-    
-    public int getMaxSeats(){
-        return rows*columns;
+
+    public int getMaxSeats() {
+        return rows * columns;
     }
 
-    public Map<Integer,Map<Integer,Seat>> getSeatsMap() {
-        if(seatsMap==null){
+    public Map<Integer, Map<Integer, Seat>> getSeatsMap() {
+        if (seatsMap == null) {
             seatsMap = new HashMap<>();
         }
         return seatsMap;
     }
 
-    public void setSeatsMap(Map<Integer,Map<Integer,Seat>> seatsMap) {
+    public void setSeatsMap(Map<Integer, Map<Integer, Seat>> seatsMap) {
         this.seatsMap = seatsMap;
     }
-    
-    public static Comparator<Level> getComparatorbyLevelId(){
-        Comparator<Level> byLevelId = (Level o1, Level o2)->Integer.valueOf(o1.getLevelId()).compareTo(o2.getLevelId());
+
+    public static Comparator<Level> getComparatorbyLevelId() {
+        Comparator<Level> byLevelId = (Level o1, Level o2) -> Integer.valueOf(o1.getLevelId()).compareTo(o2.getLevelId());
         return byLevelId;
     }
 }
